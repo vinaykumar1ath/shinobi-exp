@@ -1,0 +1,37 @@
+services:
+  mariadb-exp:
+    image: mariadb:lts
+    restart: always
+    networks:
+      - shinobi-exp
+    environment:
+      - MARIADB_ROOT_PASSWORD=shinobi
+      - MARIADB_DATABASE=ccio
+    volumes:
+      - shinobi-mariadb-exp:/var/lib/mysql
+  shinobi-exp:
+    image: shinobi:21-11-25
+    restart: always
+    networks:
+      - shinobi-exp
+    environment:
+      - DB_HOST=mariadb-exp
+      - DB_PASSWORD=shinobi
+      - DB_USER=root
+      - DISABLE_MARIADB=true
+      - DB_DISABLE_INCLUDED=true
+    volumes:
+      - /mnt/hdd1/videos:/home/Shinobi/videos
+      - /home/vinay/shinobi-exp/config/conf.json:/home/Shinobi/conf.json
+      - /home/vinay/shinobi-exp/config/super.json:/home/Shinobi/super.json
+      - /home/vinay/shinobi-exp/config/init.sh:/home/Shinobi/Docker/init.sh
+      - /home/vinay/shinobi-exp/config/sql:/home/Shinobi/sql
+    ports:
+      - 8080:8080
+    depends_on:
+      - mariadb-exp
+volumes:
+  shinobi-mariadb-exp:
+networks:
+  shinobi-exp:
+    driver: bridge

@@ -1,0 +1,4 @@
+*.bak
+*.indep
+config/archive/
+config/shinobi-exp.tar
